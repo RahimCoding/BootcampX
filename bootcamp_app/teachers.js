@@ -15,14 +15,12 @@ FROM assistance_requests
 JOIN teachers ON teachers.id = teacher_id
 JOIN students ON students.id = student_id
 JOIN cohorts ON cohorts.id = cohort_id
-WHERE cohorts.name ILIKE '%${process.argv[2] || 'JUL02'}%'
-LIMIT 8`;
+WHERE cohorts.name ILIKE $1 
+LIMIT $2`;
 
 
 console.log(query);
-pool.query(
-  query
-)
+pool.query(query, [`%${process.argv[2] || 'FEB'}%`, process.argv[3] || 8])
   .then(res => {
     res.rows.forEach(row => {
       console.log(`${row.teacher} and was in the ${row.cohort} cohort`);
